@@ -1,0 +1,209 @@
+@model RetroVerseGaming.Models.Game
+@{
+    ViewData["Title"] = "Add New Game";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .admin-form-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 30px;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        color: var(--text-gray);
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control, .form-select {
+        background: rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: white;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: rgba(0,0,0,0.3);
+        border-color: var(--accent-purple);
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        color: white;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255,255,255,0.3);
+    }
+    
+    .section-title {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="admin-header">
+    <div>
+        <h1 class="page-title">Add New Game</h1>
+        <p class="text-muted mb-0">Create a new digital product listing</p>
+    </div>
+    <a asp-action="Games" class="btn btn-outline-light">
+        <i class="fas fa-arrow-left me-2"></i> Back to Library
+    </a>
+</div>
+
+<div class="admin-form-card">
+    <form method="post" asp-action="CreateGame" enctype="multipart/form-data">
+        <!-- ... (previous sections) ... -->
+        
+        <h5 class="section-title mt-4"><i class="fas fa-cloud-download-alt me-2 text-info"></i> Digital Assets</h5>
+        <div class="form-group">
+            <label class="form-label">Cover Image</label>
+            <div class="d-flex flex-column gap-2">
+                 <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                 <div class="text-center my-2 text-muted">- OR -</div>
+                 <input type="url" name="ImageUrl" class="form-control" placeholder="Enter external URL (https://...)" />
+            </div>
+            <small class="text-muted">Upload a local file or paste an external URL.</small>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Game Title *</label>
+                    <input type="text" name="Title" class="form-control" placeholder="e.g. Cyberpunk 2077" required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Platform *</label>
+                    <select name="Platform" class="form-select" required>
+                        <option value="">Select Platform</option>
+                        <option value="PlayStation 5">PlayStation 5</option>
+                        <option value="PlayStation 4">PlayStation 4</option>
+                        <option value="Xbox Series X/S">Xbox Series X/S</option>
+                        <option value="Xbox One">Xbox One</option>
+                        <option value="Nintendo Switch">Nintendo Switch</option>
+                        <option value="PC">PC</option>
+                        <option value="Multi-Platform">Multi-Platform</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Publisher *</label>
+                    <input type="text" name="Publisher" class="form-control" placeholder="e.g. CD Projekt Red" required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Developer *</label>
+                    <input type="text" name="Developer" class="form-control" placeholder="e.g. CD Projekt Red" required />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Genre *</label>
+                    <select name="Genre" class="form-select" required>
+                        <option value="">Select Genre</option>
+                        <option value="Action">Action</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="RPG">RPG</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Racing">Racing</option>
+                        <option value="Fighting">Fighting</option>
+                        <option value="Shooter">Shooter</option>
+                        <option value="Strategy">Strategy</option>
+                        <option value="Simulation">Simulation</option>
+                        <option value="Horror">Horror</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Rating *</label>
+                    <select name="Rating" class="form-select" required>
+                        <option value="">Select Rating</option>
+                        <option value="E">E (Everyone)</option>
+                        <option value="E10+">E10+ (Everyone 10+)</option>
+                        <option value="T">T (Teen)</option>
+                        <option value="M">M (Mature 17+)</option>
+                        <option value="AO">AO (Adults Only)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label">Release Date *</label>
+                    <input type="date" name="ReleaseDate" class="form-control" required />
+                </div>
+            </div>
+        </div>
+
+        <h5 class="section-title mt-4"><i class="fas fa-tag me-2 text-success"></i> Pricing & Inventory</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Price (Rp) *</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-white">Rp</span>
+                        <input type="number" name="Price" class="form-control" placeholder="0" min="0" required />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Availability (Digital) *</label>
+                    <input type="number" name="Stock" class="form-control" value="999" min="0" required />
+                    <small class="text-muted">For digital items, set a high number (e.g. 999)</small>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="section-title mt-4"><i class="fas fa-cloud-download-alt me-2 text-info"></i> Digital Assets</h5>
+        <div class="form-group">
+            <label class="form-label">Cover Image</label>
+            <div class="d-flex flex-column gap-2">
+                 <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                 <div class="text-center my-2 text-muted">- OR -</div>
+                 <input type="url" name="ImageUrl" class="form-control" placeholder="Enter external URL (https://...)" />
+            </div>
+            <small class="text-muted">Upload a local file or paste an external URL.</small>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Game Installer Download URL <span class="badge bg-danger ms-2">IMPORTANT</span></label>
+            <input type="url" name="DownloadUrl" class="form-control" placeholder="https://..." required />
+            <small class="text-muted">Link for customers to download the game installer after purchase.</small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description *</label>
+            <textarea name="Description" class="form-control" rows="5" placeholder="Enter game description..." required></textarea>
+        </div>
+
+        <div class="d-flex gap-3 justify-content-end mt-4">
+            <a asp-action="Games" class="btn btn-outline-light px-4">Cancel</a>
+            <button type="submit" class="btn btn-primary px-5">
+                <i class="fas fa-save me-2"></i> Save Game
+            </button>
+        </div>
+    </form>
+</div>

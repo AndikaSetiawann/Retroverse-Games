@@ -1,0 +1,432 @@
+@model RetroVerseGaming.Models.Cart
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<style>
+    /* Custom Checkout Styles */
+    .checkout-container {
+        padding-bottom: 50px;
+    }
+    
+    .section-title {
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+    }
+    
+    .section-title i {
+        color: var(--accent-cyan);
+    }
+    
+    /* Order Items List */
+    .order-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+    }
+    
+    .order-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .order-item-title {
+        font-weight: 600;
+        color: white;
+        font-size: 1.1rem;
+    }
+    
+    .order-item-meta {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .order-item-price {
+        color: var(--accent-green);
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    
+    /* Payment Methods */
+    .payment-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+    
+    .payment-tab {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        color: var(--text-gray);
+        cursor: pointer;
+        transition: 0.3s;
+        text-align: center;
+        font-weight: 500;
+        min-width: 140px;
+    }
+    
+    .payment-tab i {
+        display: block;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+        color: var(--text-gray);
+    }
+    
+    .payment-tab:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+    }
+    
+    .payment-tab.active {
+        background: rgba(124, 58, 237, 0.1);
+        border-color: var(--accent-purple);
+        color: white;
+    }
+    
+    .payment-tab.active i {
+        color: var(--accent-purple);
+    }
+    
+    /* Payment Options Radio Cards */
+    .payment-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .payment-option-label {
+        cursor: pointer;
+        margin: 0;
+        width: 100%;
+    }
+    
+    .payment-option-card {
+        background: rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: 0.2s;
+        height: 100%;
+    }
+    
+    .payment-option-card:hover { 
+        background: rgba(255,255,255,0.05);
+    }
+    
+    input[type="radio"]:checked + .payment-option-card {
+        border-color: var(--accent-cyan);
+        background: rgba(6, 182, 212, 0.1);
+        box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+    }
+    
+    .payment-icon {
+        font-size: 24px;
+        width: 40px;
+        text-align: center;
+    }
+    
+    /* Summary Card (Right Side) */
+    .summary-card {
+        background: #151525; /* Slightly lighter than page bg */
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 24px;
+        position: sticky;
+        top: 100px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+    
+    .summary-row.total {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+        align-items: center;
+    }
+    
+    .summary-row.total .price {
+        font-size: 1.5rem;
+        color: var(--accent-green);
+    }
+    
+    .trust-badge {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: var(--accent-green);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .input-retro {
+        background: rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        width: 100%;
+        color: white;
+    }
+    
+    .input-retro:focus {
+        border-color: var(--accent-purple);
+        outline: none;
+    }
+</style>
+
+<div class="checkout-container">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 style="font-weight: 700; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Checkout & Payment
+        </h2>
+        <a href="/Customer/Cart" class="btn btn-outline-light btn-sm">
+            <i class="fas fa-arrow-left me-2"></i> Back to Cart
+        </a>
+    </div>
+
+    <form method="post" asp-action="PlaceOrder" id="paymentForm">
+        <input type="hidden" name="shippingAddress" value="Digital Delivery" />
+        
+        <div class="row">
+            <!-- Left Column: Details -->
+            <div class="col-lg-8">
+                
+                <!-- 1. Order Items -->
+                <div class="mb-5">
+                    <h5 class="section-title"><i class="fas fa-shopping-bag"></i> Order Items</h5>
+                    
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="order-item">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="@item.ImageUrl" alt="@item.GameTitle" style="width: 60px; height: 34px; object-fit: cover; border-radius: 4px;">
+                                <div>
+                                    <div class="order-item-title">@item.GameTitle</div>
+                                    <div class="order-item-meta">
+                                        <i class="fas fa-cloud-download-alt"></i> Digital Copy
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-item-price">
+                                Rp @item.Price.ToString("N0")
+                            </div>
+                        </div>
+                    }
+                </div>
+                
+                <!-- 2. Payment Method -->
+                <div class="mb-5">
+                    <h5 class="section-title"><i class="fas fa-wallet"></i> Payment Method</h5>
+                    
+                    <div class="payment-tabs">
+                        <div class="payment-tab active" onclick="selectTab('ewallet')">
+                            <i class="fas fa-mobile-alt"></i> E-Wallet
+                        </div>
+                        <div class="payment-tab" onclick="selectTab('va')">
+                            <i class="fas fa-university"></i> Virtual Account
+                        </div>
+                        <div class="payment-tab" onclick="selectTab('card')">
+                            <i class="far fa-credit-card"></i> Credit Card
+                        </div>
+                    </div>
+                    
+                    <!-- E-Wallet Panel -->
+                    <div id="panel-ewallet" class="payment-panel">
+                        <div class="payment-grid mb-4">
+                            <label class="payment-option-label">
+                                <input type="radio" name="paymentMethod" value="Dana" class="d-none" checked>
+                                <div class="payment-option-card">
+                                    <div class="payment-icon" style="color: #118EE9;"><i class="fas fa-wallet"></i></div>
+                                    <div><strong>Dana</strong></div>
+                                </div>
+                            </label>
+                            <label class="payment-option-label">
+                                <input type="radio" name="paymentMethod" value="OVO" class="d-none">
+                                <div class="payment-option-card">
+                                    <div class="payment-icon" style="color: #4C2A86;"><i class="fas fa-dot-circle"></i></div>
+                                    <div><strong>OVO</strong></div>
+                                </div>
+                            </label>
+                            <label class="payment-option-label">
+                                <input type="radio" name="paymentMethod" value="GoPay" class="d-none">
+                                <div class="payment-option-card">
+                                    <div class="payment-icon" style="color: #00AED6;"><i class="fas fa-motorcycle"></i></div>
+                                    <div><strong>GoPay</strong></div>
+                                </div>
+                            </label>
+                            <label class="payment-option-label">
+                                <input type="radio" name="paymentMethod" value="ShopeePay" class="d-none">
+                                <div class="payment-option-card">
+                                    <div class="payment-icon" style="color: #EE4D2D;"><i class="fas fa-shopping-bag"></i></div>
+                                    <div><strong>ShopeePay</strong></div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="text-muted mb-2">WhatsApp Number (for confirmation) *</label>
+                            <input type="tel" name="phoneNumber" class="input-retro" placeholder="08xxxxxxxxxx" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Virtual Account Panel -->
+                    <div id="panel-va" class="payment-panel" style="display: none;">
+                         <div class="payment-grid">
+                            <label class="payment-option-label">
+                                <input type="radio" name="paymentMethod" value="BCA" class="d-none">
+                                <div class="payment-option-card">
+                                    <div class="payment-icon" style="color: #0060AF;"><i class="fas fa-university"></i></div>
+                                    <div><strong>BCA Virtual Account</strong></div>
+                                </div>
+                            </label>
+                            <label class="payment-option-label">
+                                <input type="radio" name="paymentMethod" value="Mandiri" class="d-none">
+                                <div class="payment-option-card">
+                                    <div class="payment-icon" style="color: #FFB700;"><i class="fas fa-university"></i></div>
+                                    <div><strong>Mandiri Virtual Account</strong></div>
+                                </div>
+                            </label>
+                            <label class="payment-option-label">
+                                <input type="radio" name="paymentMethod" value="BRI" class="d-none">
+                                <div class="payment-option-card">
+                                    <div class="payment-icon" style="color: #00529C;"><i class="fas fa-university"></i></div>
+                                    <div><strong>BRI Virtual Account</strong></div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Credit Card Panel -->
+                    <div id="panel-card" class="payment-panel" style="display: none;">
+                        <input type="radio" name="paymentMethod" value="CreditCard" class="d-none" id="cc-radio">
+                         <div class="row g-3">
+                             <div class="col-12">
+                                 <label class="text-muted mb-1">Card Number</label>
+                                 <input type="text" name="cardNumber" class="input-retro" placeholder="0000 0000 0000 0000">
+                             </div>
+                             <div class="col-md-6">
+                                 <label class="text-muted mb-1">Expiry Date</label>
+                                 <input type="text" name="expiryDate" class="input-retro" placeholder="MM/YY">
+                             </div>
+                             <div class="col-md-6">
+                                 <label class="text-muted mb-1">CVV</label>
+                                 <input type="text" name="cvv" class="input-retro" placeholder="123">
+                             </div>
+                             <div class="col-12">
+                                 <label class="text-muted mb-1">Cardholder Name</label>
+                                 <input type="text" name="cardholderName" class="input-retro" placeholder="Name on Card">
+                             </div>
+                         </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Right Column: Summary -->
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h5 class="mb-4" style="font-weight: 600;">Payment Summary</h5>
+                    
+                    <div class="summary-row">
+                        <span>Original Price</span>
+                        <span>Rp @Model.Items.Sum(i => i.Price).ToString("N0")</span>
+                    </div>
+                    <div class="summary-row">
+                         <span>Discount</span>
+                         <span class="text-white">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span class="text-white">Included</span>
+                    </div>
+                    
+                    <div class="summary-row total">
+                        <span>TOTAL</span>
+                        <span class="price">Rp @Model.Items.Sum(i => i.Price).ToString("N0")</span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 py-3 mt-4" style="font-size: 1.1rem; border-radius: 8px;">
+                        <i class="fas fa-lock me-2"></i> Pay Now
+                    </button>
+                    
+                    <a href="/Customer/Cart" class="btn btn-secondary w-100 py-2 mt-3" style="border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent;">
+                        Cancel
+                    </a>
+                    
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                        <div style="line-height: 1.2;">
+                            <div><strong>Secure Payment</strong></div>
+                            <small>Data encrypted & secure</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function selectTab(type) {
+        // Tabs UI
+        document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        // Panels UI
+        document.querySelectorAll('.payment-panel').forEach(p => p.style.display = 'none');
+        document.getElementById('panel-' + type).style.display = 'block';
+        
+        // Logic handling
+        const radios = document.querySelectorAll('input[name="paymentMethod"]');
+        radios.forEach(r => r.checked = false); // clear selection
+        
+        if(type === 'ewallet') {
+             document.querySelector('input[value="Dana"]').checked = true;
+             document.querySelector('input[name="phoneNumber"]').required = true;
+        } else if (type === 'va') {
+             document.querySelector('input[value="BCA"]').checked = true;
+             document.querySelector('input[name="phoneNumber"]').required = false;
+        } else if (type === 'card') {
+             document.getElementById('cc-radio').checked = true;
+             document.querySelector('input[name="phoneNumber"]').required = false;
+        }
+    }
+</script>

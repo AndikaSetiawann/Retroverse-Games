@@ -1,0 +1,230 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-purple);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: white;
+    }
+    
+    .stat-label {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+    }
+    
+    .purple-card .stat-icon { background: rgba(124, 58, 237, 0.2); color: var(--accent-purple); }
+    .pink-card .stat-icon { background: rgba(236, 72, 153, 0.2); color: var(--accent-pink); }
+    .cyan-card .stat-icon { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); }
+    .green-card .stat-icon { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+    
+    .recent-activity {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 24px;
+        height: 100%;
+    }
+    
+    .activity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .activity-item {
+        display: flex;
+        gap: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-gray);
+    }
+    
+    .welcome-banner {
+        background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-content { position: relative; z-index: 1; }
+    
+    .welcome-title { font-size: 2rem; font-weight: 700; margin-bottom: 10px; color: white; }
+    .welcome-subtitle { color: rgba(255,255,255,0.8); font-size: 1.1rem; }
+    
+    .welcome-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+    }
+</style>
+
+<div class="welcome-banner">
+    <div class="welcome-circle" style="width: 200px; height: 200px; top: -50px; right: -50px;"></div>
+    <div class="welcome-circle" style="width: 100px; height: 100px; bottom: -20px; left: 50px;"></div>
+    
+    <div class="welcome-content">
+        <h2 class="welcome-title">Welcome back, @Context.Session.GetString("UserName")!</h2>
+        <p class="welcome-subtitle">Here's what's happening in your store today.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Total Games -->
+    <div class="col-md-3">
+        <div class="stat-card purple-card">
+            <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+            <div class="stat-value">@ViewBag.TotalGames</div>
+            <div class="stat-label">Total Games</div>
+        </div>
+    </div>
+    
+    <!-- Total Users -->
+    <div class="col-md-3">
+        <div class="stat-card pink-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-value">@ViewBag.TotalUsers</div>
+            <div class="stat-label">Registered Users</div>
+        </div>
+    </div>
+    
+    <!-- Total Orders -->
+    <div class="col-md-3">
+        <div class="stat-card cyan-card">
+            <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+            <div class="stat-value">@ViewBag.TotalOrders</div>
+            <div class="stat-label">Total Orders</div>
+        </div>
+    </div>
+    
+    <!-- Revenue -->
+    <div class="col-md-3">
+        <div class="stat-card green-card">
+            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+            @if (ViewBag.TotalRevenue != null)
+            {
+               <div class="stat-value text-truncate" style="font-size: 1.5rem; line-height: 1.3; margin-bottom: 12px;">Rp @ViewBag.TotalRevenue.ToString("N0")</div>
+            }
+            else
+            {
+                <div class="stat-value">Rp 0</div>
+            }
+            <div class="stat-label">Total Revenue</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="recent-activity">
+            <div class="activity-header">
+                <h5 style="margin: 0; color: white;">Quick Actions</h5>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <a href="/Admin/Create" class="btn btn-primary w-100 p-3 h-100 d-flex flex-column align-items-center justify-content-center gap-2">
+                        <i class="fas fa-plus-circle fa-2x"></i>
+                        <span>Add New Game</span>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/Admin/Orders" class="btn btn-primary w-100 p-3 h-100 d-flex flex-column align-items-center justify-content-center gap-2" style="background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-clipboard-check fa-2x text-info"></i>
+                        <span>Manage Orders</span>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/Admin/Users" class="btn btn-primary w-100 p-3 h-100 d-flex flex-column align-items-center justify-content-center gap-2" style="background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-users-cog fa-2x text-warning"></i>
+                        <span>Manage Users</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="recent-activity">
+            <div class="activity-header">
+                <h5 style="margin: 0; color: white;">System Status</h5>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--accent-green);"><i class="fas fa-server"></i></div>
+                    <div>
+                        <div style="font-weight: 600; color: white;">Server Status</div>
+                        <div style="font-size: 0.85rem; color: var(--accent-green);">Online</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--accent-purple);"><i class="fas fa-database"></i></div>
+                    <div>
+                        <div style="font-weight: 600; color: white;">Database</div>
+                        <div style="font-size: 0.85rem; color: var(--accent-purple);">Connected (MongoDB)</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon" style="color: var(--accent-cyan);"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <div style="font-weight: 600; color: white;">Last Login</div>
+                        <div style="font-size: 0.85rem; color: var(--text-gray);">@DateTime.Now.ToString("dd MMM yyyy HH:mm")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

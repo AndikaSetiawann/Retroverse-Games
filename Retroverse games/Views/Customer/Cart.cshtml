@@ -1,0 +1,318 @@
+@model RetroVerseGaming.Models.Cart
+@{
+    ViewData["Title"] = "Shopping Cart";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<style>
+    /* Cart Structure */
+    .cart-container {
+        padding-bottom: 50px;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 15px;
+    }
+    
+    .section-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        margin: 0;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.8rem;
+    }
+    
+    /* Cart Items */
+    .cart-item {
+        background: var(--bg-card);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cart-item:hover {
+        transform: translateY(-5px);
+        border-color: rgba(124, 58, 237, 0.3);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cart-item-image {
+        width: 120px;
+        height: 68px; /* 16:9 aspect ratio approx */
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+        position: relative;
+    }
+    
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    
+    .cart-item:hover .cart-item-image img {
+        transform: scale(1.1);
+    }
+    
+    .cart-item-details {
+        flex-grow: 1;
+    }
+    
+    .cart-item-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 5px;
+        text-decoration: none;
+        display: block;
+    }
+    
+    .cart-item-title:hover {
+        color: var(--accent-cyan);
+    }
+    
+    .cart-item-meta {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .cart-item-badge {
+        background: rgba(124, 58, 237, 0.1);
+        color: var(--accent-purple);
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba(124, 58, 237, 0.2);
+    }
+    
+    .cart-item-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-right: 20px;
+    }
+    
+    .btn-remove {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    
+    .btn-remove:hover {
+        background: #ef4444;
+        color: white;
+        transform: rotate(90deg);
+    }
+    
+    /* Summary Card */
+    .summary-card {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 30px;
+        position: sticky;
+        top: 100px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        color: var(--text-gray);
+        font-size: 0.95rem;
+    }
+    
+    .summary-total {
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .total-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+    }
+    
+    .total-amount {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: var(--gradient-green);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .btn-checkout {
+        background: var(--gradient-main);
+        color: white;
+        width: 100%;
+        padding: 15px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-top: 25px;
+        border: none;
+        transition: all 0.3s;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    }
+    
+    .btn-checkout:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
+        color: white;
+    }
+    
+    .empty-cart-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: var(--bg-card);
+        border-radius: 20px;
+        border: 1px dashed rgba(255,255,255,0.1);
+    }
+</style>
+
+<div class="cart-container">
+    @if (Model == null || Model.Items.Count == 0)
+    {
+        <div class="empty-cart-state">
+            <div style="width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+                <i class="fas fa-shopping-basket" style="font-size: 40px; color: var(--text-gray);"></i>
+            </div>
+            <h3 style="color: white; font-weight: 600; margin-bottom: 15px;">Your Cart is Empty</h3>
+            <p style="color: var(--text-gray); margin-bottom: 30px;">Looks like you haven't added any games yet.</p>
+            <a href="/Customer/Catalog" class="rv-btn-primary">
+                <i class="fas fa-search me-2"></i> Browse Store
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="section-header">
+            <h1 class="section-title">
+                <i class="fas fa-shopping-cart me-3"></i>Shopping Cart
+            </h1>
+            <a href="/Customer/Catalog" class="btn btn-outline-light btn-sm">
+                <i class="fas fa-plus me-2"></i> Continue Shopping
+            </a>
+        </div>
+        
+        <div class="row">
+            <!-- Left Column: Items -->
+            <div class="col-lg-8">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="cart-item">
+                        <a href="/Customer/GameDetail/@item.GameId" class="cart-item-image">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.GameTitle">
+                            }
+                            else
+                            {
+                                <div style="width: 100%; height: 100%; background: #2a2a3d; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-gamepad text-muted"></i>
+                                </div>
+                            }
+                        </a>
+                        
+                        <div class="cart-item-details">
+                            <a href="/Customer/GameDetail/@item.GameId" class="cart-item-title">@item.GameTitle</a>
+                            <div class="cart-item-meta">
+                                <span class="cart-item-badge">DIGITAL COPY</span>
+                                <span><i class="fas fa-check-circle text-success me-1"></i> Instant Delivery</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center">
+                            <div class="cart-item-price">
+                                Rp @item.Price.ToString("N0")
+                            </div>
+                            
+                            <a href="/Customer/RemoveFromCart?gameId=@item.GameId" 
+                               class="btn-remove" 
+                               title="Remove from cart"
+                               onclick="return confirm('Remove @item.GameTitle from cart?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            <!-- Right Column: Summary -->
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h4 style="color: white; font-weight: 600; margin-bottom: 25px;">Order Summary</h4>
+                    
+                    <div class="summary-line">
+                        <span>Items (@Model.Items.Count)</span>
+                        <span>Rp @Model.Items.Sum(i => i.Price).ToString("N0")</span>
+                    </div>
+                    
+                    <div class="summary-line">
+                        <span>Discount</span>
+                        <span class="text-white">-</span>
+                    </div>
+                    
+                    <div class="summary-total">
+                        <span class="total-label">Subtotal</span>
+                        <span class="total-amount">Rp @Model.Items.Sum(i => i.Price).ToString("N0")</span>
+                    </div>
+                    
+                     <div style="margin-top: 15px; background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--accent-green); padding: 12px; border-radius: 8px;">
+                        <small style="color: var(--accent-green); display: flex; gap: 8px;">
+                            <i class="fas fa-gift mt-1"></i>
+                            Digital games are added to your library instantly after payment.
+                        </small>
+                    </div>
+
+                    <a href="/Customer/Checkout" class="btn-checkout">
+                        CHECKOUT NOW <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                    
+                    <div class="text-center mt-3">
+                         <img src="https://cdn-icons-png.flaticon.com/512/196/196566.png" alt="Secure" style="height: 20px; opacity: 0.5; margin-right: 10px;">
+                         <img src="https://cdn-icons-png.flaticon.com/512/196/196578.png" alt="Secure" style="height: 20px; opacity: 0.5; margin-right: 10px;">
+                         <small class="text-muted">Secure Checkout</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

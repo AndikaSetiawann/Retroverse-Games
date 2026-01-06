@@ -1,0 +1,94 @@
+@model RetroVerseGaming.Models.Order
+@{
+    ViewData["Title"] = "Order Confirmation";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="customer-card text-center" style="max-width: 700px; margin: 0 auto;">
+    <div class="customer-card-header justify-content-center">
+        <h4 style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px;">
+            <i class="fas fa-check-circle" style="color: var(--neon-green);"></i> ORDER BERHASIL!
+        </h4>
+    </div>
+    
+    <div style="padding: 30px;">
+        <!-- Success Animation -->
+        <div style="margin-bottom: 30px;">
+            <i class="fas fa-rocket" style="font-size: 5rem; color: var(--neon-pink); animation: float 2s ease-in-out infinite;"></i>
+        </div>
+        
+        <h3 style="color: var(--neon-green); margin-bottom: 20px;">
+            Terima kasih atas pembelian Anda!
+        </h3>
+        
+        <!-- Order Summary -->
+        <div style="background: var(--dark-card); border: 2px solid var(--neon-cyan); border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: left;">
+            <h5 style="color: var(--neon-cyan); margin-bottom: 20px;">
+                <i class="fas fa-receipt"></i> Ringkasan Order
+            </h5>
+            
+            <table style="width: 100%; color: white;">
+                <tr>
+                    <td style="padding: 8px 0; color: var(--neon-pink);">Order ID:</td>
+                    <td style="padding: 8px 0; text-align: right; font-family: 'Orbitron', sans-serif;">#@Model.Id.Substring(0, 8)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: var(--neon-pink);">Tanggal:</td>
+                    <td style="padding: 8px 0; text-align: right;">@Model.OrderDate.ToString("dd MMM yyyy HH:mm")</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: var(--neon-pink);">Games:</td>
+                    <td style="padding: 8px 0; text-align: right;">
+                        @foreach (var item in Model.Items)
+                        {
+                            <div style="color: var(--neon-green);">@item.GameTitle</div>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: var(--neon-pink);">Metode Pembayaran:</td>
+                    <td style="padding: 8px 0; text-align: right;">@Model.PaymentMethod</td>
+                </tr>
+                <tr style="border-top: 2px solid var(--neon-pink); margin-top: 10px;">
+                    <td style="padding: 15px 0; color: var(--neon-pink); font-size: 1.2rem; font-weight: bold;">TOTAL:</td>
+                    <td style="padding: 15px 0; text-align: right; font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--neon-green);">
+                        Rp @Model.TotalAmount.ToString("N0")
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- WhatsApp Confirmation -->
+        <div style="background: linear-gradient(135deg, rgba(37, 211, 102, 0.2), rgba(0, 0, 0, 0.3)); border: 2px solid #25D366; border-radius: 15px; padding: 25px; margin-bottom: 30px;">
+            <h5 style="color: #25D366; margin-bottom: 15px;">
+                <i class="fab fa-whatsapp"></i> Konfirmasi Pembayaran via WhatsApp
+            </h5>
+            <p style="color: white; margin-bottom: 20px;">
+                Klik tombol di bawah untuk menghubungi admin dan konfirmasi pembayaran Anda.
+                Games akan langsung tersedia di Library setelah pembayaran dikonfirmasi.
+            </p>
+            <a href="@ViewBag.WhatsAppUrl" target="_blank" 
+               class="btn btn-lg" 
+               style="background: #25D366; color: white; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 1.2rem; text-decoration: none; display: inline-block;">
+                <i class="fab fa-whatsapp"></i> KONFIRMASI VIA WHATSAPP
+            </a>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="/Customer/Library" class="btn btn-retro btn-lg">
+                <i class="fas fa-book"></i> Lihat Library
+            </a>
+            <a href="/Customer/Catalog" class="btn btn-buy btn-lg">
+                <i class="fas fa-store"></i> Lanjut Belanja
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+@@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+</style>

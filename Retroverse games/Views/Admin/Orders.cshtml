@@ -1,0 +1,128 @@
+@model List<RetroVerseGaming.Models.Order>
+@{
+    ViewData["Title"] = "Manage Orders";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <div>
+        <h1 class="page-title">Order Management</h1>
+        <p class="text-muted mb-0">Track and manage customer orders</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-primary rounded-pill px-3 py-2">Total: @Model.Count Orders</span>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> No orders found.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>
+                            <code style="color: var(--accent-purple);">#@order.Id.Substring(0, 8)</code>
+                        </td>
+                        <td>
+                            <div style="font-weight: 500;">@ViewData[$"CustomerName_{order.Id}"]</div>
+                        </td>
+                        <td class="text-muted">
+                            @order.OrderDate.ToString("dd MMM yyyy HH:mm")
+                        </td>
+                        <td>
+                            <span style="color: var(--accent-green); font-weight: 600;">Rp @order.TotalAmount.ToString("N0")</span>
+                        </td>
+                        <td>
+                            @if (order.Status == "Pending")
+                            {
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            }
+                            else if (order.Status == "Processing")
+                            {
+                                <span class="badge bg-info text-dark">Processing</span>
+                            }
+                            else if (order.Status == "Shipped")
+                            {
+                                <span class="badge" style="background: var(--accent-purple);">Shipped</span>
+                            }
+                            else if (order.Status == "Delivered" || order.Status == "Completed")
+                            {
+                                <span class="badge bg-success">Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Cancelled</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-sm btn-outline-light" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="background: var(--bg-card); border-color: rgba(255,255,255,0.1);">
+                                    <li><h6 class="dropdown-header">Update Status</h6></li>
+                                    <li>
+                                        <form method="post" asp-action="UpdateOrderStatus">
+                                            <input type="hidden" name="orderId" value="@order.Id" />
+                                            <input type="hidden" name="status" value="Processing" />
+                                            <button type="submit" class="dropdown-item text-info"><i class="fas fa-cog me-2"></i> Processing</button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form method="post" asp-action="UpdateOrderStatus">
+                                            <input type="hidden" name="orderId" value="@order.Id" />
+                                            <input type="hidden" name="status" value="Shipped" />
+                                            <button type="submit" class="dropdown-item text-primary"><i class="fas fa-truck me-2"></i> Shipped</button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form method="post" asp-action="UpdateOrderStatus">
+                                            <input type="hidden" name="orderId" value="@order.Id" />
+                                            <input type="hidden" name="status" value="Completed" />
+                                            <button type="submit" class="dropdown-item text-success"><i class="fas fa-check me-2"></i> Completed</button>
+                                        </form>
+                                    </li>
+                                    <li><hr class="dropdown-divider bg-white opacity-10"></li>
+                                    <li>
+                                        <form method="post" asp-action="UpdateOrderStatus" onsubmit="return confirm('Cancel this order?')">
+                                            <input type="hidden" name="orderId" value="@order.Id" />
+                                            <input type="hidden" name="status" value="Cancelled" />
+                                            <button type="submit" class="dropdown-item text-danger"><i class="fas fa-times me-2"></i> Cancel</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<style>
+    .dropdown-item { color: #ccc; }
+    .dropdown-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .dropdown-item button { width: 100%; text-align: left; background: none; border: none; padding: 0; }
+</style>

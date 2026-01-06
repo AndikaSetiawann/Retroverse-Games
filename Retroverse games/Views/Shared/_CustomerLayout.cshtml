@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RetroVerse</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon-retroverse.svg" />
+    <style>
+        :root {
+            --bg-dark: #0f0f1a;
+            --bg-card: rgba(26, 26, 46, 0.75); /* Semi-transparent for Glass effect */
+            --bg-hover: rgba(37, 37, 69, 0.9);
+            --accent-purple: #7c3aed;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --text-white: #ffffff;
+            --text-gray: #9ca3af;
+            --text-muted: #6b7280;
+            --gradient-main: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+            --gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #7c3aed 100%);
+            --gradient-green: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.2) 0%, transparent 25%), 
+                radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.2) 0%, transparent 25%),
+                radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.2) 0%, transparent 40%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-white);
+        }
+
+        /* Glassmorphism Helper */
+        .rv-card, .customer-card, .admin-table, .payment-panel, .summary-card, .cart-item, .rv-game-card, .rv-hero {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Header */
+        .rv-header {
+            background: rgba(15, 15, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .rv-nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        
+        .rv-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .rv-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-main);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+        
+        .rv-logo-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .rv-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .rv-nav-link {
+            color: var(--text-gray);
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .rv-nav-link:hover, .rv-nav-link.active {
+            color: var(--text-white);
+            background: var(--bg-card);
+        }
+        
+        .rv-nav-link.active {
+            background: var(--gradient-main);
+            color: white;
+        }
+        
+        .rv-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .rv-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+        
+        .rv-search:focus-within {
+            border-color: var(--accent-purple);
+        }
+        
+        .rv-search input {
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            color: white;
+            width: 200px;
+            font-size: 0.85rem;
+        }
+        
+        .rv-search input::placeholder { color: var(--text-muted); }
+        
+        .rv-search button {
+            background: var(--gradient-main);
+            border: none;
+            padding: 10px 16px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .rv-cart-btn {
+            background: var(--bg-card);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            color: var(--text-gray);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .rv-cart-btn:hover {
+            background: var(--bg-hover);
+            color: white;
+        }
+        
+        .rv-user-btn {
+            background: var(--gradient-main);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .rv-user-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+            color: white;
+        }
+        
+        .rv-logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+        
+        .rv-logout-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        /* Main Content */
+        .rv-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        
+        /* Alert */
+        .rv-alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .rv-alert-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+        }
+        
+        .rv-alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        
+        /* Buttons - Global */
+        .rv-btn-primary {
+            background: var(--gradient-main);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .rv-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+            color: white;
+        }
+        
+        .rv-btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-gray);
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .rv-btn-secondary:hover {
+            background: var(--bg-hover);
+            color: white;
+        }
+        
+        .rv-btn-success {
+            background: var(--gradient-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .rv-btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            color: white;
+        }
+        
+        /* Cards - Global */
+        .rv-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .rv-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(124, 58, 237, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="rv-header">
+        <nav class="rv-nav">
+            <a href="/" class="rv-logo">
+                <div class="rv-logo-icon"><i class="fas fa-gamepad"></i></div>
+                <span class="rv-logo-text">RetroVerse</span>
+            </a>
+            
+            <div class="rv-nav-links">
+                <a href="/Customer/Catalog" class="rv-nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Catalog" ? "active" : "")">
+                    <i class="fas fa-store"></i> Store
+                </a>
+                <a href="/Customer/Library" class="rv-nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Library" ? "active" : "")">
+                    <i class="fas fa-book"></i> Library
+                </a>
+                <a href="/Customer/MyOrders" class="rv-nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "MyOrders" ? "active" : "")">
+                    <i class="fas fa-receipt"></i> Orders
+                </a>
+            </div>
+            
+            <div class="rv-nav-right">
+                <form method="get" action="/Customer/Catalog" class="rv-search">
+                    <input type="text" name="search" placeholder="Search games..." value="@ViewBag.SearchQuery">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+                
+                @if (!string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+                {
+                    <a href="/Customer/Cart" class="rv-cart-btn">
+                        <i class="fas fa-shopping-cart"></i> Cart
+                    </a>
+                    <a href="/Account/Profile" class="rv-user-btn" style="padding: 6px 16px; gap: 10px;">
+                        @if (!string.IsNullOrEmpty(Context.Session.GetString("UserAvatar")))
+                        {
+                            <img src="@Context.Session.GetString("UserAvatar")" alt="Avatar" style="width: 30px; height: 30px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2);">
+                        }
+                        else
+                        {
+                            <i class="fas fa-user"></i> 
+                        }
+                        @Context.Session.GetString("UserName")
+                    </a>
+                    <a href="/Account/Logout" class="rv-logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="rv-btn-primary">Login</a>
+                    <a href="/Account/Register" class="rv-btn-secondary">Register</a>
+                }
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="rv-main">
+        @if (TempData["Success"] != null)
+        {
+            <div class="rv-alert rv-alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+        
+        @if (TempData["Error"] != null)
+        {
+            <div class="rv-alert rv-alert-error">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+        
+        @RenderBody()
+    </main>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

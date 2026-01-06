@@ -1,0 +1,84 @@
+@model List<RetroVerseGaming.Models.Game>
+@{
+    ViewData["Title"] = "Manage Games";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <div>
+        <h1 class="page-title">Game Library</h1>
+        <p class="text-muted mb-0">Manage your digital game inventory</p>
+    </div>
+    <a asp-action="CreateGame" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add New Game
+    </a>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> No games found. Start by adding your first game!
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Cover</th>
+                    <th>Game Info</th>
+                    <th>Platform</th>
+                    <th>Genre</th>
+                    <th>Price</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var game in Model)
+                {
+                    <tr>
+                        <td>
+                            <div style="width: 60px; height: 80px; border-radius: 8px; overflow: hidden; background: var(--bg-dark);">
+                                @if (!string.IsNullOrEmpty(game.ImageUrl))
+                                {
+                                    <img src="@game.ImageUrl" alt="@game.Title" style="width: 100%; height: 100%; object-fit: cover;" onerror="this. style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div style="width: 100%; height: 100%; display: none; align-items: center; justify-content: center;">
+                                        <i class="fas fa-image text-muted"></i>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-gamepad text-muted"></i>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: white; font-size: 1.05rem;">@game.Title</div>
+                            <div class="text-muted small">@game.Publisher</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-dark border border-secondary text-light">@game.Platform</span>
+                        </td>
+                        <td>
+                            <span class="badge" style="background: rgba(124, 58, 237, 0.2); color: var(--accent-purple);">@game.Genre</span>
+                        </td>
+                        <td>
+                            <span style="color: var(--accent-green); font-weight: 600;">Rp @game.Price.ToString("N0")</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="/Admin/EditGame/@game.Id" class="btn btn-sm btn-outline-light me-1" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="/Admin/DeleteGame/@game.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this game?')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

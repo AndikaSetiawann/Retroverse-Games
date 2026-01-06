@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon-retroverse.svg" />
+    <style>
+        :root {
+            --bg-dark: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --bg-hover: #252545;
+            --accent-purple: #7c3aed;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --text-white: #ffffff;
+            --text-gray: #9ca3af;
+            --text-muted: #6b7280;
+            --gradient-main: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            color: var(--text-white);
+            display: flex;
+        }
+        
+        /* Sidebar */
+        .admin-sidebar {
+            width: 280px;
+            background: var(--bg-card);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 30px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-main);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .sidebar-nav {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: var(--gradient-main);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.2);
+        }
+        
+        .nav-item i { width: 20px; text-align: center; }
+        
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+        
+        /* Common Admin Elements */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            padding: 20px 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: white;
+        }
+        
+        .btn-view-site {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-view-site:hover {
+            background: white;
+            color: var(--bg-dark);
+        }
+        
+        .alert {
+            border-radius: 12px;
+            border: none;
+            color: white;
+            margin-bottom: 24px;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: var(--accent-green);
+        }
+        
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .table {
+            color: var(--text-gray);
+            margin-bottom: 0;
+            --bs-table-bg: transparent;
+            --bs-table-hover-bg: rgba(255,255,255,0.05);
+            --bs-table-color: var(--text-gray);
+            --bs-table-hover-color: var(--text-white);
+        }
+        
+        .table th {
+            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+            color: var(--text-white);
+            font-weight: 600;
+            padding: 15px;
+            background-color: transparent !important;
+        }
+        
+        .table td {
+            border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+            padding: 15px;
+            vertical-align: middle;
+            background-color: transparent !important;
+            color: var(--text-gray);
+        }
+        
+        .table tr:last-child td { border-bottom: none !important; }
+        
+        .table-hover tbody tr:hover td {
+            color: var(--text-white);
+            background-color: rgba(255,255,255,0.05) !important;
+        }
+        
+        /* Form Styles */
+        .form-control {
+            background: var(--bg-dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .form-control:focus {
+            background: var(--bg-dark);
+            border-color: var(--accent-purple);
+            color: white;
+            box-shadow: none;
+        }
+        
+        .form-label { color: var(--text-gray); font-weight: 500; }
+        
+        .btn-primary {
+            background: var(--gradient-main);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="sidebar-header">
+            <a href="/Admin/Dashboard" class="admin-logo">
+                <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                <span class="logo-text">Admin Panel</span>
+            </a>
+            
+            <div class="admin-user">
+                <div class="user-avatar">
+                   <i class="fas fa-user"></i>
+                </div>
+                <div>
+                   <div style="font-size: 0.9rem; font-weight: 600;">@Context.Session.GetString("UserName")</div>
+                   <div style="font-size: 0.75rem; color: var(--text-gray);">Administrator</div>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="/Admin/Dashboard" class="nav-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                <i class="fas fa-grid-2"></i> Dashboard
+            </a>
+            <a href="/Admin/Games" class="nav-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Games" ? "active" : "")">
+                <i class="fas fa-gamepad"></i> Games Management
+            </a>
+            <a href="/Admin/Orders" class="nav-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" ? "active" : "")">
+                <i class="fas fa-shopping-bag"></i> Orders & Sales
+            </a>
+            <a href="/Admin/Users" class="nav-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")">
+                <i class="fas fa-users"></i> Users List
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a href="/Account/Logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <h1 class="page-title">@ViewData["Title"]</h1>
+            <a href="/" class="btn-view-site" target="_blank">
+                <i class="fas fa-external-link-alt"></i> View Main Site
+            </a>
+        </div>
+        
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        
+        @RenderBody()
+    </main>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

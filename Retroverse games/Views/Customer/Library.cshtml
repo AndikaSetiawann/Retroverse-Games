@@ -1,0 +1,308 @@
+@model List<RetroVerseGaming.Models.Game>
+@{
+    ViewData["Title"] = "My Library";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<style>
+    /* Library Header */
+    .rv-library-header {
+        background: linear-gradient(to right, rgba(124, 58, 237, 0.2), transparent);
+        border-left: 5px solid var(--accent-purple);
+        padding: 30px;
+        border-radius: 0 16px 16px 0;
+        margin-bottom: 40px;
+    }
+
+    .rv-lib-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Library Grid */
+    .rv-lib-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+    }
+
+    .rv-lib-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .rv-lib-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .rv-lib-img-wrapper {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .rv-lib-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .rv-lib-card:hover .rv-lib-img {
+        transform: scale(1.1);
+    }
+
+    .rv-lib-body {
+        padding: 20px;
+    }
+
+    .rv-lib-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .rv-lib-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Download UI */
+    .rv-download-area {
+        background: rgba(0,0,0,0.2);
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .rv-btn-download {
+        width: 100%;
+        background: var(--gradient-main);
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s;
+    }
+
+    .rv-btn-download:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    
+    .rv-btn-play {
+        width: 100%;
+        background: var(--gradient-green);
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        display: none; /* Hidden by default */
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .rv-btn-play:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        color: white;
+    }
+
+    .rv-progress-container {
+        display: none;
+    }
+
+    .rv-progress-bar {
+        height: 8px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+
+    .rv-progress-fill {
+        height: 100%;
+        background: var(--gradient-cyan);
+        width: 0%;
+        transition: width 0.2s linear;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    }
+
+    .rv-progress-text {
+        font-size: 0.8rem;
+        color: var(--text-gray);
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .rv-empty-lib {
+        text-center: center;
+        padding: 80px 0;
+        opacity: 0.7;
+    }
+</style>
+
+<div class="rv-library-header">
+    <h1 class="rv-lib-title">My Library</h1>
+    <p style="color: var(--text-gray); margin: 0;">Access and download all your purchased games</p>
+</div>
+
+@if (Model == null || Model.Count == 0)
+{
+    <div class="rv-empty-lib">
+        <i class="fas fa-ghost fa-4x mb-4" style="color: var(--text-muted);"></i>
+        <h3>Your library is empty</h3>
+        <p>Explore our catalog to find your next adventure!</p>
+        <a href="/Customer/Catalog" class="rv-btn-primary mt-3">Browse Store</a>
+    </div>
+}
+else
+{
+    <div class="rv-lib-grid">
+        @foreach (var game in Model)
+        {
+            <div class="rv-lib-card" id="card-@game.Id">
+                <div class="rv-lib-img-wrapper">
+                    @if (!string.IsNullOrEmpty(game.ImageUrl))
+                    {
+                        <img src="@game.ImageUrl" class="rv-lib-img" alt="@game.Title" onerror="this.src='/img/placeholder.jpg'">
+                    }
+                    else
+                    {
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <i class="fas fa-gamepad fa-3x" style="color: var(--text-muted);"></i>
+                        </div>
+                    }
+                </div>
+                
+                <div class="rv-lib-body">
+                    <h3 class="rv-lib-title">@game.Title</h3>
+                    <div class="rv-lib-meta">
+                        <span>@game.Genre</span>
+                        <span>•</span>
+                        <span>@game.Platform</span>
+                    </div>
+                    
+                    <div class="rv-download-area">
+                        <!-- Download Button -->
+                        <button onclick="startDownload('@game.Id', '@game.Title', '@game.DownloadUrl')" class="rv-btn-download" id="btn-dl-@game.Id">
+                            <i class="fas fa-download"></i> Install Game
+                        </button>
+                        
+                        <!-- Progress Bar (Hidden initially) -->
+                        <div class="rv-progress-container" id="progress-@game.Id">
+                            <div class="rv-progress-bar">
+                                <div class="rv-progress-fill" id="fill-@game.Id"></div>
+                            </div>
+                            <div class="rv-progress-text">
+                                <span id="status-@game.Id">Downloading...</span>
+                                <span id="percent-@game.Id">0%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Play/Open Button (Hidden initially) -->
+                        <a href="@(string.IsNullOrEmpty(game.DownloadUrl) ? "#" : game.DownloadUrl)" 
+                           class="rv-btn-play" 
+                           id="btn-play-@game.Id" 
+                           target="@(string.IsNullOrEmpty(game.DownloadUrl) ? "_self" : "_blank")"
+                           onclick="@(string.IsNullOrEmpty(game.DownloadUrl) ? $"playGame('{game.Title}'); return false;" : "")">
+                            <i class="fas fa-play"></i> @(string.IsNullOrEmpty(game.DownloadUrl) ? "Play Now" : "Open Game")
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<script>
+    function startDownload(id, title, url) {
+        const btn = document.getElementById(`btn-dl-${id}`);
+        const progress = document.getElementById(`progress-${id}`);
+        const fill = document.getElementById(`fill-${id}`);
+        const percent = document.getElementById(`percent-${id}`);
+        const playBtn = document.getElementById(`btn-play-${id}`);
+        
+        // UI Transition
+        btn.style.display = 'none';
+        progress.style.display = 'block';
+        
+        let width = 0;
+        const interval = setInterval(() => {
+            // Random speed for realism
+            width += Math.random() * 5;
+            
+            if (width >= 100) {
+                width = 100;
+                clearInterval(interval);
+                
+                // Complete
+                fill.style.width = '100%';
+                percent.innerText = '100%';
+                document.getElementById(`status-${id}`).innerText = 'Installed';
+                document.getElementById(`status-${id}`).style.color = 'var(--accent-green)';
+                
+                setTimeout(() => {
+                    progress.style.display = 'none';
+                    playBtn.style.display = 'flex';
+                    
+                    // Trigger actual download if URL exists and it's a file
+                    // But usually we just show "Play" button which links to it
+                    
+                    // Save state
+                    localStorage.setItem(`game_installed_${id}`, 'true');
+                }, 1000);
+            } else {
+                fill.style.width = `${width}%`;
+                percent.innerText = `${Math.round(width)}%`;
+            }
+        }, 50);
+    }
+    
+    function playGame(title) {
+        alert(`Launching ${title}...\n\n(This is a demo, requires internal download URL)`);
+    }
+
+    // Restore installed state on load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Simple check to restore visible state if previously "installed"
+        // In a real app this would check the backend or file system
+        /*
+        document.querySelectorAll('.rv-lib-card').forEach(card => {
+            const id = card.id.replace('card-', '');
+            if (localStorage.getItem(`game_installed_${id}`) === 'true') {
+                 document.getElementById(`btn-dl-${id}`).style.display = 'none';
+                 document.getElementById(`btn-play-${id}`).style.display = 'flex';
+            }
+        });
+        */
+    });
+</script>

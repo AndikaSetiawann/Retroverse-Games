@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="customer-card" style="position: relative; z-index: 1;">
+    <div class="welcome-section" style="position: relative; z-index: 2;">
+        <div class="text-center mb-5">
+            <div style="font-size: 5rem; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; animation: pulse 2s ease-in-out infinite;">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h1 class="welcome-title" style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 3px;">
+                WELCOME BACK, @Context.Session.GetString("UserName")!
+            </h1>
+            <p class="welcome-subtitle" style="color: var(--neon-green); font-size: 1.3rem; letter-spacing: 2px;">
+                >> READY TO LEVEL UP? <<
+            </p>
+        </div>
+
+        <div class="row mt-5 g-4">
+            <div class="col-md-4">
+                <div class="feature-card" style="background: var(--dark-card); border: 2px solid var(--neon-cyan); padding: 30px; text-align: center; transition: all 0.4s ease; cursor: pointer; position: relative; z-index: 100;" onclick="window.location.href='/Customer/Catalog'">
+                    <div class="feature-icon mb-3" style="font-size: 4rem; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h5 style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; margin-bottom: 15px;">EXPLORE STORE</h5>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Discover new games from various genres!</p>
+                    <a href="/Customer/Catalog" class="btn btn-retro" style="pointer-events: auto !important; z-index: 101 !important;">
+                        <i class="fas fa-compass"></i> BROWSE GAMES
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card" style="background: var(--dark-card); border: 2px solid var(--neon-pink); padding: 30px; text-align: center; transition: all 0.4s ease; cursor: pointer; position: relative; z-index: 100;" onclick="window.location.href='/Customer/MyOrders'">
+                    <div class="feature-icon mb-3" style="font-size: 4rem; background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h5 style="color: var(--neon-pink); font-family: 'Orbitron', sans-serif; margin-bottom: 15px;">MY ORDERS</h5>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Track your orders and purchase history!</p>
+                    <a href="/Customer/MyOrders" class="btn btn-retro" style="pointer-events: auto !important; z-index: 101 !important;">
+                        <i class="fas fa-eye"></i> VIEW ORDERS
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card" style="background: var(--dark-card); border: 2px solid var(--neon-purple); padding: 30px; text-align: center; transition: all 0.4s ease; cursor: pointer; position: relative; z-index: 100;" onclick="window.location.href='/Customer/Library'">
+                    <div class="feature-icon mb-3" style="font-size: 4rem; background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h5 style="color: var(--neon-purple); font-family: 'Orbitron', sans-serif; margin-bottom: 15px;">MY LIBRARY</h5>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Access your purchased games!</p>
+                    <a href="/Customer/Library" class="btn btn-retro" style="pointer-events: auto !important; z-index: 101 !important;">
+                        <i class="fas fa-gamepad"></i> VIEW LIBRARY
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h3 class="section-title" style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 40px;">
+                    WHY CHOOSE RETROVERSE?
+                </h3>
+                <div class="row mt-4 g-3">
+                    <div class="col-md-3">
+                        <div class="feature-box" style="background: var(--dark-card); border: 1px solid var(--neon-cyan); padding: 25px; border-radius: 10px; transition: all 0.3s ease;">
+                            <i class="fas fa-bolt fa-3x mb-3" style="color: var(--neon-yellow);"></i>
+                            <h5 style="color: var(--neon-cyan);">INSTANT DELIVERY</h5>
+                            <p class="text-secondary small">Digital games delivered instantly</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-box" style="background: var(--dark-card); border: 1px solid var(--neon-pink); padding: 25px; border-radius: 10px; transition: all 0.3s ease;">
+                            <i class="fas fa-shield-alt fa-3x mb-3" style="color: var(--neon-green);"></i>
+                            <h5 style="color: var(--neon-pink);">SECURE PAYMENT</h5>
+                            <p class="text-secondary small">100% secure transactions</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-box" style="background: var(--dark-card); border: 1px solid var(--neon-purple); padding: 25px; border-radius: 10px; transition: all 0.3s ease;">
+                            <i class="fas fa-infinity fa-3x mb-3" style="color: var(--neon-purple);"></i>
+                            <h5 style="color: var(--neon-purple);">HUGE LIBRARY</h5>
+                            <p class="text-secondary small">Thousands of games available</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-box" style="background: var(--dark-card); border: 1px solid var(--neon-cyan); padding: 25px; border-radius: 10px; transition: all 0.3s ease;">
+                            <i class="fas fa-headset fa-3x mb-3" style="color: var(--neon-cyan);"></i>
+                            <h5 style="color: var(--neon-cyan);">24/7 SUPPORT</h5>
+                            <p class="text-secondary small">Always here to help</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .feature-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--glow-cyan);
+    }
+    
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+    }
+    
+    @@keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+</style>

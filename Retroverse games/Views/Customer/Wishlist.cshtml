@@ -1,0 +1,137 @@
+@model List<RetroVerseGaming.Models.Game>
+@{
+    ViewData["Title"] = "My Wishlist";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<style>
+    .rv-wishlist-header {
+        position: relative;
+        margin-bottom: 40px;
+        padding-top: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 20px;
+    }
+
+    .rv-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+    }
+
+    .rv-wishlist-card {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s;
+        position: relative;
+    }
+
+    .rv-wishlist-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-pink);
+        box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2);
+    }
+
+    .rv-wishlist-img-wrapper {
+        height: 160px;
+        position: relative;
+    }
+
+    .rv-wishlist-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .rv-wishlist-body {
+        padding: 20px;
+    }
+
+    .rv-remove-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.6);
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .rv-remove-btn:hover {
+        background: #ef4444;
+        color: white;
+    }
+    
+    .rv-empty-state {
+        text-center: center;
+        padding: 80px 0;
+        opacity: 0.7;
+    }
+</style>
+
+<div class="rv-wishlist-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 style="font-weight: 800; font-size: 2.5rem; color: white;">My Wishlist</h1>
+        <p class="text-muted mb-0">Games you're saving for later</p>
+    </div>
+    <a href="/Customer/Catalog" class="btn btn-outline-light rounded-pill px-4">
+        <i class="fas fa-plus me-2"></i> Add More Games
+    </a>
+</div>
+
+@if (Model == null || Model.Count == 0)
+{
+    <div class="rv-empty-state">
+        <i class="fas fa-heart-broken fa-4x mb-4" style="color: var(--text-muted);"></i>
+        <h3>Your wishlist is empty</h3>
+        <p>Save games you love to track their price or buy later!</p>
+        <a href="/Customer/Catalog" class="btn btn-primary mt-3 px-4 py-2 rounded-pill">Browse Store</a>
+    </div>
+}
+else
+{
+    <div class="rv-card-grid">
+        @foreach (var game in Model)
+        {
+            <div class="rv-wishlist-card">
+                <div class="rv-wishlist-img-wrapper">
+                     <a href="/Customer/ToggleWishlist?gameId=@game.Id" class="rv-remove-btn" title="Remove from Wishlist">
+                        <i class="fas fa-times"></i>
+                     </a>
+                    @if (!string.IsNullOrEmpty(game.ImageUrl))
+                    {
+                        <img src="@game.ImageUrl" class="rv-wishlist-img" alt="@game.Title" onerror="this.src='/img/placeholder.jpg'">
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center h-100 bg-dark text-muted">
+                            <i class="fas fa-gamepad fa-3x"></i>
+                        </div>
+                    }
+                </div>
+                <div class="rv-wishlist-body">
+                    <h5 class="text-white mb-1 text-truncate">@game.Title</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-secondary">@game.Genre</span>
+                        <span class="text-success fw-bold">Rp @game.Price.ToString("N0")</span>
+                    </div>
+                    <div class="d-grid">
+                        <a href="/Customer/GameDetail/@game.Id" class="btn btn-sm btn-outline-light rounded-pill">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

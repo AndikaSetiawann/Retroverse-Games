@@ -1,0 +1,85 @@
+@model List<RetroVerseGaming.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="customer-card" style="position: relative; z-index: 1;">
+    <div class="customer-card-header" style="position: relative; z-index: 2;">
+        <h4 style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px;">
+            <i class="fas fa-shopping-bag"></i> MY ORDERS
+        </h4>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info" style="background: var(--dark-card); border: 1px solid var(--neon-cyan); color: var(--neon-cyan); position: relative; z-index: 2;">
+            <i class="fas fa-info-circle"></i> You don't have any orders yet.
+        </div>
+        <a href="/Customer/Catalog" class="btn btn-retro" style="pointer-events: auto !important; z-index: 101 !important; position: relative;">
+            <i class="fas fa-store"></i> START SHOPPING
+        </a>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var order in Model)
+            {
+                <div class="col-md-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <small class="text-muted">Order ID</small>
+                                    <p class="mb-0"><strong>#@order.Id.Substring(0, 8)</strong></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-muted">Tanggal</small>
+                                    <p class="mb-0">@order.OrderDate.ToString("dd MMM yyyy")</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-muted">Total</small>
+                                    <p class="mb-0 text-success"><strong>Rp @order.TotalAmount.ToString("N0")</strong></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-muted">Status</small>
+                                    <p class="mb-0">
+                                        @if (order.Status == "Pending")
+                                        {
+                                            <span class="badge bg-warning">Pending</span>
+                                        }
+                                        else if (order.Status == "Processing")
+                                        {
+                                            <span class="badge bg-info">Processing</span>
+                                        }
+                                        else if (order.Status == "Shipped")
+                                        {
+                                            <span class="badge bg-primary">Shipped</span>
+                                        }
+                                        else if (order.Status == "Delivered")
+                                        {
+                                            <span class="badge bg-success">Delivered</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        }
+                                    </p>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-muted">Items</small>
+                                    <p class="mb-0">@order.Items.Count game(s)</p>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <a href="/Customer/MyOrderDetail/@order.Id" class="btn btn-sm btn-retro" style="pointer-events: auto !important; z-index: 101 !important;">
+                                        <i class="fas fa-eye"></i> DETAILS
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

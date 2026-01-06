@@ -1,0 +1,169 @@
+@model RetroVerseGaming.Models.Order
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card" style="background: var(--dark-card); border: 2px solid var(--neon-cyan);">
+    <div class="admin-card-header" style="background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 128, 0.1)); border-bottom: 2px solid var(--neon-cyan);">
+        <h4 style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px;">
+            <i class="fas fa-receipt"></i> ORDER DETAILS #@Model.Id.Substring(0, 8)
+        </h4>
+        <a asp-action="Orders" class="btn btn-retro">
+            <i class="fas fa-arrow-left"></i> BACK
+        </a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h5 style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; margin-bottom: 20px; border-bottom: 2px solid var(--neon-cyan); padding-bottom: 10px;">
+                <i class="fas fa-info-circle"></i> ORDER INFORMATION
+            </h5>
+            <div style="background: var(--dark-card); border: 1px solid var(--neon-cyan); border-radius: 10px; padding: 20px;">
+                <table style="width: 100%; color: white;">
+                    <tr style="margin-bottom: 10px;">
+                        <td width="150" style="color: var(--neon-cyan); padding: 8px 0;"><strong>Order ID:</strong></td>
+                        <td style="color: white; padding: 8px 0;">#@Model.Id</td>
+                    </tr>
+                    <tr style="margin-bottom: 10px;">
+                        <td style="color: var(--neon-cyan); padding: 8px 0;"><strong>Customer:</strong></td>
+                        <td style="color: white; padding: 8px 0;">@ViewBag.CustomerName</td>
+                    </tr>
+                    <tr style="margin-bottom: 10px;">
+                        <td style="color: var(--neon-cyan); padding: 8px 0;"><strong>Email:</strong></td>
+                        <td style="color: white; padding: 8px 0;">@ViewBag.CustomerEmail</td>
+                    </tr>
+                    <tr style="margin-bottom: 10px;">
+                        <td style="color: var(--neon-cyan); padding: 8px 0;"><strong>Phone:</strong></td>
+                        <td style="color: white; padding: 8px 0;">@ViewBag.CustomerPhone</td>
+                    </tr>
+                    <tr style="margin-bottom: 10px;">
+                        <td style="color: var(--neon-cyan); padding: 8px 0;"><strong>Date:</strong></td>
+                        <td style="color: white; padding: 8px 0;">@Model.OrderDate.ToString("dd MMMM yyyy HH:mm")</td>
+                    </tr>
+                    <tr style="margin-bottom: 10px;">
+                        <td style="color: var(--neon-cyan); padding: 8px 0;"><strong>Payment:</strong></td>
+                        <td style="color: white; padding: 8px 0;">@Model.PaymentMethod</td>
+                    </tr>
+                    <tr style="margin-bottom: 10px;">
+                        <td style="color: var(--neon-cyan); padding: 8px 0;"><strong>Status:</strong></td>
+                        <td style="padding: 8px 0;">
+                            @if (Model.Status == "Pending")
+                            {
+                                <span class="badge" style="background: var(--neon-yellow); color: var(--dark-bg);">Pending</span>
+                            }
+                            else if (Model.Status == "Processing")
+                            {
+                                <span class="badge" style="background: var(--neon-cyan); color: var(--dark-bg);">Processing</span>
+                            }
+                            else if (Model.Status == "Shipped")
+                            {
+                                <span class="badge" style="background: var(--neon-purple); color: white;">Shipped</span>
+                            }
+                            else if (Model.Status == "Delivered" || Model.Status == "Completed")
+                            {
+                                <span class="badge" style="background: var(--neon-green); color: var(--dark-bg);">Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge" style="background: #dc3545; color: white;">Cancelled</span>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h5 style="color: var(--neon-pink); font-family: 'Orbitron', sans-serif; margin-bottom: 20px; border-bottom: 2px solid var(--neon-pink); padding-bottom: 10px;">
+                <i class="fas fa-map-marker-alt"></i> SHIPPING ADDRESS
+            </h5>
+            <div style="background: var(--dark-card); border: 1px solid var(--neon-pink); border-radius: 10px; padding: 20px;">
+                <p style="color: white; margin: 0; line-height: 1.6;">@Model.ShippingAddress</p>
+            </div>
+        </div>
+    </div>
+
+    <h5 style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; margin-bottom: 20px; border-bottom: 2px solid var(--neon-cyan); padding-bottom: 10px;">
+        <i class="fas fa-box"></i> ORDER ITEMS
+    </h5>
+    <div class="table-responsive">
+        <table class="table" style="background: var(--dark-card); color: white;">
+            <thead style="background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 128, 0.1)); border-bottom: 2px solid var(--neon-cyan);">
+                <tr>
+                    <th style="color: var(--neon-cyan);">Game</th>
+                    <th class="text-center" style="color: var(--neon-cyan);">Quantity</th>
+                    <th class="text-end" style="color: var(--neon-cyan);">Price</th>
+                    <th class="text-end" style="color: var(--neon-cyan);">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Items != null && Model.Items.Count > 0)
+                {
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td style="color: white;"><strong style="color: var(--neon-green);">@item.GameTitle</strong></td>
+                            <td class="text-center" style="color: white;">@item.Quantity</td>
+                            <td class="text-end" style="color: white;">Rp @item.Price.ToString("N0")</td>
+                            <td class="text-end" style="color: var(--neon-green);"><strong>Rp @((item.Price * item.Quantity).ToString("N0"))</strong></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center" style="color: white;">No items</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="border-top: 2px solid var(--neon-pink); background: rgba(255, 0, 128, 0.1);">
+                    <td colspan="3" class="text-end" style="color: var(--neon-pink);">
+                        <h5 class="mb-0" style="font-family: 'Orbitron', sans-serif;">TOTAL:</h5>
+                    </td>
+                    <td class="text-end">
+                        <h4 class="mb-0" style="color: var(--neon-green); font-family: 'Orbitron', sans-serif;">Rp @Model.TotalAmount.ToString("N0")</h4>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="mt-4">
+        <h5 style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif; margin-bottom: 20px; border-bottom: 2px solid var(--neon-cyan); padding-bottom: 10px;">
+            <i class="fas fa-edit"></i> UPDATE ORDER STATUS
+        </h5>
+        <div class="d-flex gap-2 flex-wrap">
+            <form method="post" asp-action="UpdateOrderStatus" class="d-inline">
+                <input type="hidden" name="orderId" value="@Model.Id" />
+                <input type="hidden" name="status" value="Processing" />
+                <button type="submit" class="btn btn-retro" style="pointer-events: auto !important; z-index: 101 !important;">
+                    <i class="fas fa-cog"></i> Processing
+                </button>
+            </form>
+            <form method="post" asp-action="UpdateOrderStatus" class="d-inline">
+                <input type="hidden" name="orderId" value="@Model.Id" />
+                <input type="hidden" name="status" value="Shipped" />
+                <button type="submit" class="btn btn-retro" style="pointer-events: auto !important; z-index: 101 !important;">
+                    <i class="fas fa-truck"></i> Shipped
+                </button>
+            </form>
+            <form method="post" asp-action="UpdateOrderStatus" class="d-inline">
+                <input type="hidden" name="orderId" value="@Model.Id" />
+                <input type="hidden" name="status" value="Completed" />
+                <button type="submit" class="btn btn-buy" style="pointer-events: auto !important; z-index: 101 !important;">
+                    <i class="fas fa-check"></i> Completed
+                </button>
+            </form>
+            <form method="post" asp-action="UpdateOrderStatus" class="d-inline"
+                onsubmit="return confirm('Cancel this order?')">
+                <input type="hidden" name="orderId" value="@Model.Id" />
+                <input type="hidden" name="status" value="Cancelled" />
+                <button type="submit" class="btn btn-danger" style="pointer-events: auto !important; z-index: 101 !important; background: linear-gradient(45deg, #dc3545, #c82333); border-color: #dc3545;">
+                    <i class="fas fa-times"></i> Cancelled
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

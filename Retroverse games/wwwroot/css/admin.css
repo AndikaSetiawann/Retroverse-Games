@@ -1,0 +1,526 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+:root {
+    --neon-blue: #00d9ff;
+    --neon-pink: #ff2a6d;
+    --neon-purple: #b537f2;
+    --neon-green: #05ffa1;
+    --dark-bg: #0d0221;
+    --darker-bg: #05010d;
+    --card-bg: #1a0b2e;
+}
+
+/* Admin Layout - Cyberpunk Theme */
+.admin-body {
+    margin: 0;
+    padding: 0;
+    background: var(--darker-bg);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    color: #fff;
+}
+
+.admin-body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(181, 55, 242, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.1) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Sidebar - Futuristic */
+.admin-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    background: linear-gradient(180deg, rgba(13, 2, 33, 0.95) 0%, rgba(26, 11, 46, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    color: white;
+    overflow-y: auto;
+    z-index: 1000;
+    border-right: 2px solid var(--neon-blue);
+    box-shadow: 5px 0 30px rgba(0, 217, 255, 0.3);
+}
+
+.sidebar-header {
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 2px solid var(--neon-blue);
+    background: rgba(0, 217, 255, 0.05);
+    position: relative;
+}
+
+.sidebar-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
+    animation: gradientShift 3s linear infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.sidebar-header i {
+    font-size: 3rem;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 20px var(--neon-blue));
+}
+
+.sidebar-header h4 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-blue);
+    font-weight: 900;
+    margin: 10px 0 5px 0;
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+}
+
+.sidebar-header p {
+    color: var(--neon-green);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.admin-user-info {
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(181, 55, 242, 0.1));
+    border-bottom: 1px solid rgba(0, 217, 255, 0.3);
+    border-top: 1px solid rgba(0, 217, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.admin-user-info i {
+    color: var(--neon-pink);
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 10px var(--neon-pink));
+}
+
+.admin-user-info span {
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+/* Sidebar Navigation - Neon Style */
+.sidebar-nav {
+    padding: 25px 0;
+}
+
+.sidebar-nav .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 18px 25px;
+    color: var(--neon-blue);
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-left: 4px solid transparent;
+    gap: 15px;
+    margin: 5px 0;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-nav .nav-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0, 217, 255, 0.2), transparent);
+    transition: width 0.4s ease;
+}
+
+.sidebar-nav .nav-item:hover::before {
+    width: 100%;
+}
+
+.sidebar-nav .nav-item i {
+    font-size: 1.2rem;
+    width: 30px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav .nav-item:hover {
+    background: rgba(0, 217, 255, 0.1);
+    border-left-color: var(--neon-pink);
+    color: var(--neon-pink);
+    transform: translateX(5px);
+    text-shadow: 0 0 15px var(--neon-pink);
+}
+
+.sidebar-nav .nav-item:hover i {
+    transform: scale(1.2) rotate(5deg);
+    filter: drop-shadow(0 0 10px var(--neon-pink));
+}
+
+.sidebar-nav .nav-item.active {
+    background: linear-gradient(90deg, rgba(255, 42, 109, 0.2), transparent);
+    border-left-color: var(--neon-pink);
+    color: var(--neon-pink);
+    font-weight: 700;
+}
+
+.sidebar-nav .nav-logout {
+    margin-top: 30px;
+    border-top: 1px solid rgba(0, 217, 255, 0.2);
+    padding-top: 25px;
+}
+
+.sidebar-nav .nav-logout:hover {
+    border-left-color: #ff4444;
+    color: #ff4444;
+}
+
+/* Main Content - Futuristic */
+.admin-content {
+    margin-left: 280px;
+    min-height: 100vh;
+    background: var(--darker-bg);
+}
+
+.admin-topbar {
+    background: linear-gradient(135deg, rgba(13, 2, 33, 0.95), rgba(26, 11, 46, 0.95));
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 25px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--neon-blue);
+    box-shadow: 0 5px 30px rgba(0, 217, 255, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-topbar h5 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-blue);
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+}
+
+.admin-main {
+    padding: 35px;
+}
+
+/* Admin Cards - Neon Glow */
+.admin-card {
+    background: linear-gradient(135deg, rgba(26, 11, 46, 0.8), rgba(13, 2, 33, 0.8));
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.15);
+    margin-bottom: 30px;
+    border: 2px solid var(--neon-blue);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(0, 217, 255, 0.05), transparent);
+    transform: rotate(45deg);
+    animation: cardShine 8s linear infinite;
+}
+
+@keyframes cardShine {
+    0% { transform: rotate(45deg) translate(-100%, -100%); }
+    100% { transform: rotate(45deg) translate(100%, 100%); }
+}
+
+.admin-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--neon-purple);
+    position: relative;
+    z-index: 1;
+}
+
+.admin-card-header h4 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-blue);
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Form Styling - Futuristic */
+.admin-form-group {
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.admin-form-label {
+    font-weight: 600;
+    color: var(--neon-blue);
+    margin-bottom: 10px;
+    display: block;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.admin-form-control {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid var(--neon-purple);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(13, 2, 33, 0.6);
+    color: white;
+}
+
+.admin-form-control:focus {
+    border-color: var(--neon-blue);
+    outline: none;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+    background: rgba(13, 2, 33, 0.8);
+}
+
+.admin-form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Table Styling - Cyberpunk */
+.admin-table {
+    width: 100%;
+    background: rgba(13, 2, 33, 0.6);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.15);
+    border: 2px solid var(--neon-purple);
+    position: relative;
+    z-index: 1;
+}
+
+.admin-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table thead {
+    background: linear-gradient(135deg, rgba(181, 55, 242, 0.3), rgba(0, 217, 255, 0.3));
+    color: var(--neon-blue);
+}
+
+.admin-table thead th {
+    padding: 18px;
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 2px solid var(--neon-pink);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(0, 217, 255, 0.05);
+    transform: translateX(5px);
+}
+
+.admin-table tbody td {
+    padding: 18px;
+    color: #e0e0e0;
+}
+
+/* Buttons - Neon Style */
+.btn-admin-primary {
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+    color: white;
+    border: 2px solid var(--neon-pink);
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 0.9rem;
+    box-shadow: 0 5px 20px rgba(255, 42, 109, 0.3);
+}
+
+.btn-admin-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 40px rgba(255, 42, 109, 0.5);
+    color: white;
+}
+
+.btn-admin-secondary {
+    background: transparent;
+    color: var(--neon-blue);
+    border: 2px solid var(--neon-blue);
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 0.9rem;
+}
+
+.btn-admin-secondary:hover {
+    background: var(--neon-blue);
+    color: var(--darker-bg);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 70px;
+    }
+    
+    .sidebar-header h4,
+    .sidebar-header p,
+    .admin-user-info span,
+    .sidebar-nav .nav-item span {
+        display: none;
+    }
+    
+    .admin-content {
+        margin-left: 70px;
+    }
+}
+/* Dropdown Menu Dark Theme */
+.dropdown-menu {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    border: 2px solid var(--admin-gold);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+.dropdown-item {
+    color: white;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 215, 0, 0.2);
+    color: var(--admin-gold);
+}
+
+.dropdown-divider {
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* Info Box */
+.info-box {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    border: 2px solid var(--admin-gold);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.info-title {
+    color: var(--admin-gold);
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--admin-gold);
+}
+
+.address-text {
+    color: white;
+    line-height: 1.6;
+}
+
+.section-subtitle {
+    color: var(--admin-gold);
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--admin-gold);
+}
+/* Fix Dropdown di Table */
+.table-responsive {
+    overflow: visible !important;
+}
+
+.table tbody tr td:last-child {
+    overflow: visible;
+}
+
+.btn-group {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+    z-index: 9999 !important;
+    top: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+    transform: none !important;
+}
+
+.dropdown-menu-end {
+    right: 0 !important;
+    left: auto !important;
+}
+
+/* Dropdown Item dengan Form */
+.dropdown-item form {
+    margin: 0;
+}
+
+.dropdown-item button {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    color: inherit;
+}
+
+.dropdown-item button:hover {
+    background: none;
+}

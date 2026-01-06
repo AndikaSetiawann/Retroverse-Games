@@ -1,0 +1,97 @@
+@model List<RetroVerseGaming.Models.User>
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-header">
+    <div>
+        <h1 class="page-title">User Management</h1>
+        <p class="text-muted mb-0">Manage registered users and roles</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-info rounded-pill px-3 py-2 text-dark">Total: @Model.Count Users</span>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> No users found.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Contact</th>
+                    <th>Role</th>
+                    <th>Joined Date</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-purple); display: flex; align-items: center; justify-content: center; font-weight: 600; color: white;">
+                                    @if (!string.IsNullOrEmpty(user.Username))
+                                    {
+                                        @user.Username.Substring(0, 1).ToUpper()
+                                    }
+                                    else
+                                    {
+                                        <span>?</span>
+                                    }
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: white;">@user.FullName</div>
+                                    <div class="text-muted small">@@@user.Username</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: white; font-size: 0.9rem;">@user.Email</div>
+                            <div class="text-muted small">@(string.IsNullOrEmpty(user.PhoneNumber) ? "-" : user.PhoneNumber)</div>
+                        </td>
+                        <td>
+                            @if (user.Role == "Admin")
+                            {
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-shield-alt me-1"></i> Admin
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-user me-1"></i> Customer
+                                </span>
+                            }
+                        </td>
+                        <td class="text-muted">
+                            @user.CreatedAt.ToString("dd MMM yyyy")
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex justify-content-end gap-2">
+                                <form method="post" asp-action="ToggleUserRole" class="d-inline">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-warning" title="Toggle Admin Role">
+                                        <i class="fas fa-user-shield"></i>
+                                    </button>
+                                </form>
+                                <a href="/Admin/DeleteUser/@user.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,54 @@
+@model RetroVerseGaming.Models.Order
+@{
+    ViewData["Title"] = "Order Success";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="customer-card text-center" style="position: relative; z-index: 1;">
+    <div style="position: relative; z-index: 2;">
+        <div class="mb-4">
+            <i class="fas fa-check-circle fa-5x" style="color: var(--neon-green); text-shadow: 0 0 30px rgba(5, 255, 161, 0.6); animation: pulse 2s ease-in-out infinite;"></i>
+        </div>
+
+        <h2 style="color: var(--neon-green); font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;">
+            🎉 ORDER SUCCESSFUL!
+        </h2>
+        <p class="lead mb-4" style="color: var(--neon-cyan); font-size: 1.3rem;">Thank you! Your order has been placed successfully.</p>
+
+        <div class="card border-success mb-4" style="max-width: 500px; margin: 0 auto; background: var(--dark-card); border: 2px solid var(--neon-green) !important;">
+            <div class="card-body">
+                <p class="mb-2" style="color: var(--neon-cyan);"><strong>Order ID:</strong></p>
+                <h5 class="mb-3" style="color: var(--neon-cyan); font-family: 'Orbitron', sans-serif;">#@Model.Id.Substring(0, 12)</h5>
+
+                <p class="mb-2" style="color: var(--neon-cyan);"><strong>Total Payment:</strong></p>
+                <h4 class="mb-3" style="color: var(--neon-green); font-family: 'Orbitron', sans-serif;">Rp @Model.TotalAmount.ToString("N0")</h4>
+
+                <p class="mb-2" style="color: var(--neon-cyan);"><strong>Payment Method:</strong></p>
+                <p class="mb-3" style="color: var(--neon-pink);">@Model.PaymentMethod</p>
+
+                <p class="mb-2" style="color: var(--neon-cyan);"><strong>Status:</strong></p>
+                <span class="badge" style="background: linear-gradient(45deg, var(--neon-green), var(--neon-cyan)); color: var(--dark-bg); padding: 10px 20px; font-size: 1rem;">@Model.Status</span>
+            </div>
+        </div>
+
+        <div class="alert alert-info" style="max-width: 600px; margin: 0 auto 20px; background: var(--dark-card); border: 1px solid var(--neon-cyan); color: var(--neon-cyan);">
+            <i class="fas fa-info-circle"></i> Your games have been added to your Library. You can download them anytime!
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center" style="position: relative; z-index: 100;">
+            <a href="/Customer/Library" class="btn btn-buy btn-lg" style="pointer-events: auto !important; z-index: 101 !important;">
+                <i class="fas fa-book"></i> VIEW LIBRARY
+            </a>
+            <a href="/Customer/Catalog" class="btn btn-retro btn-lg" style="pointer-events: auto !important; z-index: 101 !important; text-decoration: none;">
+                <i class="fas fa-store"></i> CONTINUE SHOPPING
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+</style>

@@ -1,0 +1,394 @@
+@model List<RetroVerseGaming.Models.Game>
+@{
+    ViewData["Title"] = "Store";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    var ownedGameIds = ViewBag.OwnedGameIds as List<string> ?? new List<string>();
+    var featuredGames = Model.OrderByDescending(g => g.Price).Take(1).ToList();
+}
+
+<style>
+    /* Hero Section */
+    .rv-hero {
+        position: relative;
+        height: 400px;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        border: 1px solid rgba(124, 58, 237, 0.3);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .rv-hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        filter: blur(20px) brightness(0.4);
+        z-index: 1;
+    }
+
+    .rv-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 40px;
+        display: flex;
+        gap: 40px;
+        width: 100%;
+        align-items: center;
+    }
+
+    .rv-hero-img-container {
+        flex-shrink: 0;
+        width: 600px;
+        height: 320px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+        position: relative;
+    }
+
+    .rv-hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .rv-hero-info {
+        flex: 1;
+    }
+
+    .rv-hero-badge {
+        background: var(--gradient-main);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+
+    .rv-hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 15px;
+        background: linear-gradient(to right, #fff, #a5b4fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .rv-hero-desc {
+        color: var(--text-gray);
+        margin-bottom: 25px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 1rem;
+    }
+
+    /* Filters */
+    .rv-filters {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .rv-filter-btn {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: var(--text-gray);
+        padding: 10px 20px;
+        border-radius: 30px;
+        white-space: nowrap;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .rv-filter-btn:hover, .rv-filter-btn.active {
+        background: var(--gradient-main);
+        color: white;
+        border-color: transparent;
+        transform: translateY(-2px);
+    }
+
+    /* Grid */
+    .rv-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .rv-game-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .rv-game-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent-purple);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .rv-card-img-wrapper {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .rv-card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .rv-game-card:hover .rv-card-img {
+        transform: scale(1.1);
+    }
+
+    .rv-card-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(15,15,26,0.9), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .rv-game-card:hover .rv-card-overlay {
+        opacity: 1;
+    }
+
+    .rv-owned-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(16, 185, 129, 0.9);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 2;
+        backdrop-filter: blur(5px);
+    }
+
+    .rv-card-body {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .rv-card-tags {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .rv-tag {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: rgba(255,255,255,0.05);
+        color: var(--text-gray);
+    }
+
+    .rv-card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .rv-card-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .rv-price {
+        font-weight: 700;
+        color: var(--accent-green);
+        font-size: 1.1rem;
+    }
+
+    .rv-price.owned {
+        color: var(--accent-cyan);
+        font-size: 0.9rem;
+    }
+
+    .rv-btn-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: var(--bg-hover);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .rv-btn-icon:hover {
+        background: var(--gradient-main);
+        transform: rotate(90deg);
+    }
+</style>
+
+@if (Model.Count > 0 && featuredGames.Any())
+{
+    var featured = featuredGames.First();
+    var isFeaturedOwned = ownedGameIds.Contains(featured.Id);
+    
+    <div class="rv-hero">
+        <div class="rv-hero-bg" style="background-image: url('@featured.ImageUrl');"></div>
+        <div class="rv-hero-content">
+            <div class="rv-hero-img-container">
+                @if (!string.IsNullOrEmpty(featured.ImageUrl))
+                {
+                    <img src="@featured.ImageUrl" class="rv-hero-img" alt="@featured.Title" onerror="this.src='/img/placeholder.jpg'">
+                }
+                else
+                {
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-card);">
+                        <i class="fas fa-gamepad fa-3x" style="color: var(--text-muted);"></i>
+                    </div>
+                }
+            </div>
+            <div class="rv-hero-info">
+                <span class="rv-hero-badge">FEATURED</span>
+                <h1 class="rv-hero-title">@featured.Title</h1>
+                <p class="rv-hero-desc">@featured.Description</p>
+                <div class="d-flex align-items-center gap-3 mt-4">
+                    @if (isFeaturedOwned)
+                    {
+                        <a href="/Customer/Library" class="rv-btn-success">
+                            <i class="fas fa-play"></i> In Library
+                        </a>
+                    }
+                    else
+                    {
+                         <div class="fs-4 fw-bold text-white me-3">Rp @featured.Price.ToString("N0")</div>
+                         <a href="/Customer/GameDetail/@featured.Id" class="rv-btn-primary">
+                             <i class="fas fa-shopping-cart"></i> View Details
+                         </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="rv-filters">
+    <a href="/Customer/Catalog" class="rv-filter-btn @(string.IsNullOrEmpty(ViewBag.SelectedGenre) ? "active" : "")">All Games</a>
+    @foreach (var genre in ViewBag.Genres)
+    {
+        <a href="/Customer/Catalog?genre=@genre" class="rv-filter-btn @(ViewBag.SelectedGenre == genre ? "active" : "")">@genre</a>
+    }
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h3>No games found</h3>
+        <p class="text-muted">Try a different search term or category</p>
+    </div>
+}
+else
+{
+    <div class="rv-grid">
+        @foreach (var game in Model)
+        {
+            var isOwned = ownedGameIds.Contains(game.Id);
+            
+            <div class="rv-game-card">
+                <div class="rv-card-img-wrapper">
+                    @if (isOwned)
+                    {
+                        <div class="rv-owned-badge"><i class="fas fa-check"></i> OWNED</div>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(game.ImageUrl))
+                    {
+                        <img src="@game.ImageUrl" class="rv-card-img" alt="@game.Title" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: var(--bg-card);">
+                            <i class="fas fa-gamepad fa-3x" style="color: var(--text-muted);"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-card);">
+                            <i class="fas fa-gamepad fa-3x" style="color: var(--text-muted);"></i>
+                        </div>
+                    }
+                    
+                    <a href="/Customer/GameDetail/@game.Id" class="rv-card-overlay">
+                        <span class="rv-btn-primary">View Details</span>
+                    </a>
+                    
+                    @{
+                        var wishlistedIds = ViewBag.WishlistedGameIds as List<string>;
+                        var isWishlisted = wishlistedIds != null && wishlistedIds.Contains(game.Id);
+                    }
+                    <a href="/Customer/ToggleWishlist?gameId=@game.Id" class="position-absolute top-0 start-0 m-2 btn btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.1); z-index: 10;">
+                        <i class="@(isWishlisted ? "fas text-danger" : "far text-white") fa-heart" style="font-size: 14px;"></i>
+                    </a>
+                </div>
+                
+                <div class="rv-card-body">
+                    <div class="rv-card-tags">
+                        <span class="rv-tag">@game.Genre</span>
+                        <span class="rv-tag">@game.Platform</span>
+                    </div>
+                    <h3 class="rv-card-title">@game.Title</h3>
+                    
+                    <div class="rv-card-footer">
+                        @if (isOwned)
+                        {
+                            <span class="rv-price owned">In Library</span>
+                        }
+                        else
+                        {
+                            <span class="rv-price">Rp @game.Price.ToString("N0")</span>
+                        }
+                        
+                        <a href="/Customer/GameDetail/@game.Id" class="rv-btn-icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

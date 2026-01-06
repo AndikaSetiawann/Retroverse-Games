@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00f0ff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ff0080;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a020f0;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="45" fill="#0a0a0a" stroke="url(#neonGradient)" stroke-width="2"/>
+  
+  <!-- Gamepad Icon -->
+  <g transform="translate(50, 50)">
+    <!-- Left D-pad -->
+    <rect x="-25" y="-8" width="12" height="12" fill="url(#neonGradient)" filter="url(#glow)" rx="2"/>
+    <rect x="-20" y="-13" width="2" height="8" fill="url(#neonGradient)" filter="url(#glow)"/>
+    <rect x="-20" y="5" width="2" height="8" fill="url(#neonGradient)" filter="url(#glow)"/>
+    <rect x="-25" y="-3" width="8" height="2" fill="url(#neonGradient)" filter="url(#glow)"/>
+    <rect x="-15" y="-3" width="8" height="2" fill="url(#neonGradient)" filter="url(#glow)"/>
+    
+    <!-- Right Buttons -->
+    <circle cx="15" cy="-8" r="5" fill="url(#neonGradient)" filter="url(#glow)"/>
+    <circle cx="25" cy="2" r="5" fill="url(#neonGradient)" filter="url(#glow)"/>
+    
+    <!-- Main Body -->
+    <rect x="-30" y="-5" width="60" height="20" fill="none" stroke="url(#neonGradient)" stroke-width="2" rx="5" filter="url(#glow)"/>
+  </g>
+  
+  <!-- Retro Text -->
+  <text x="50" y="85" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="url(#neonGradient)" text-anchor="middle" filter="url(#glow)">RV</text>
+</svg>
+

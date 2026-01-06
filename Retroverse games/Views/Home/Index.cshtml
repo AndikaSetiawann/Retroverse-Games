@@ -1,0 +1,405 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RetroVerse Gaming - Digital Game Store</title>
+    <link rel="icon" type="image/svg+xml" href="/img/favicon-retroverse.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --accent-purple: #7c3aed;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --text-white: #ffffff;
+            --gradient-main: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Animated Background */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .shape-1 {
+            top: -10%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: var(--accent-purple);
+            animation-delay: 0s;
+        }
+        
+        .shape-2 {
+            bottom: 20%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--accent-pink);
+            animation-delay: -5s;
+        }
+        
+        .shape-3 {
+            bottom: -10%;
+            left: 20%;
+            width: 400px;
+            height: 400px;
+            background: var(--accent-cyan);
+            animation-delay: -10s;
+        }
+        
+        @@keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Navbar */
+        .rv-navbar {
+            padding: 24px 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        .rv-nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .rv-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .rv-brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-main);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .rv-nav-links {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .rv-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .rv-link:hover {
+            color: white;
+        }
+        
+        .rv-btn-nav {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .rv-btn-nav:hover {
+            background: white;
+            color: var(--bg-dark);
+        }
+        
+        .rv-btn-grad {
+            background: var(--gradient-main);
+            border-color: transparent;
+        }
+        
+        .rv-btn-grad:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
+            color: white;
+            background: var(--gradient-main);
+        }
+
+        /* Hero */
+        .rv-hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+        }
+        
+        .rv-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 0 20px;
+        }
+        
+        .rv-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            padding: 8px 16px;
+            border-radius: 50px;
+            color: #d8b4fe;
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .rv-title {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .rv-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .rv-cta-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .rv-btn-xl {
+            padding: 16px 40px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rv-btn-primary {
+            background: var(--gradient-main);
+            color: white;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+        
+        .rv-btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.4);
+            color: white;
+        }
+        
+        .rv-btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .rv-btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        /* Features */
+        .rv-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 0 20px;
+        }
+        
+        .rv-feature-card {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 24px;
+            transition: all 0.3s;
+        }
+        
+        .rv-feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(26, 26, 46, 0.8);
+            border-color: rgba(255,255,255,0.1);
+        }
+        
+        .rv-feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .icon-purple { background: rgba(124, 58, 237, 0.1); color: var(--accent-purple); }
+        .icon-pink { background: rgba(236, 72, 153, 0.1); color: var(--accent-pink); }
+        .icon-cyan { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); }
+        
+        .rv-feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .rv-feature-desc {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        @@media (max-width: 768px) {
+            .rv-title { font-size: 3.5rem; }
+            .rv-features { grid-template-columns: 1fr; }
+            .rv-nav-links { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="rv-navbar">
+        <div class="rv-nav-container">
+            <a href="/" class="rv-brand">
+                <div class="rv-brand-icon"><i class="fas fa-gamepad"></i></div>
+                <span>RetroVerse</span>
+            </a>
+            
+            <div class="rv-nav-links">
+                <a href="#" class="rv-link">Home</a>
+                <a asp-controller="Customer" asp-action="Catalog" class="rv-link">Catalog</a>
+                <a href="#" class="rv-link">Features</a>
+                <a href="#" class="rv-link">Community</a>
+            </div>
+            
+            <div style="display: flex; gap: 15px;">
+                <a asp-controller="Account" asp-action="Login" class="rv-btn-nav">Login</a>
+                <a asp-controller="Account" asp-action="Register" class="rv-btn-nav rv-btn-grad">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="rv-hero-section">
+        <div class="container">
+            <div class="rv-hero-content">
+                <div class="rv-badge">
+                   <i class="fas fa-sparkles"></i> The Future of Gaming is Here
+                </div>
+                <h1 class="rv-title">Discover Your Next Digital Adventure</h1>
+                <p class="rv-subtitle">
+                    Access a curated library of thousands of games. Instant digital delivery, secure payments, and a community of millions.
+                </p>
+                <div class="rv-cta-group">
+                    <a asp-controller="Customer" asp-action="Catalog" class="rv-btn-xl rv-btn-primary">
+                        <i class="fas fa-rocket"></i> Start Exploring
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="rv-btn-xl rv-btn-secondary">
+                        <i class="fas fa-user-plus"></i> Join for Free
+                    </a>
+                </div>
+            </div>
+            
+            <div class="rv-features">
+                <div class="rv-feature-card">
+                    <div class="rv-feature-icon icon-purple">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3 class="rv-feature-title">Unlimited Access</h3>
+                    <p class="rv-feature-desc">Build your digital library without limits. Download and play your games anywhere, anytime.</p>
+                </div>
+                <div class="rv-feature-card">
+                    <div class="rv-feature-icon icon-pink">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="rv-feature-title">Instant Delivery</h3>
+                    <p class="rv-feature-desc">No waiting times. Get your game keys instantly after payment verification.</p>
+                </div>
+                <div class="rv-feature-card">
+                    <div class="rv-feature-icon icon-cyan">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="rv-feature-title">Secure Platform</h3>
+                    <p class="rv-feature-desc">Your data and transactions are protected by industry-leading security standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

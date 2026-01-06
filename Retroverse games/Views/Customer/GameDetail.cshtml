@@ -1,0 +1,283 @@
+@model RetroVerseGaming.Models.Game
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    var isOwned = ViewBag.IsOwned ?? false;
+}
+
+<style>
+    /* Detail Page Styles */
+    .rv-detail {
+        position: relative;
+    }
+
+    .rv-detail-bg {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100vw;
+        height: 600px;
+        background-image: url('@Model.ImageUrl');
+        background-size: cover;
+        background-position: center top;
+        mask-image: linear-gradient(to bottom, rgba(0,0,0,1), transparent);
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), transparent);
+        opacity: 0.15;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .rv-detail-main {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Left Column */
+    .rv-poster-wrapper {
+        position: sticky;
+        top: 100px;
+    }
+
+    .rv-poster {
+        width: 100%;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+
+    .rv-poster img {
+        width: 100%;
+        display: block;
+    }
+
+    .rv-meta-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .rv-meta-item {
+        margin-bottom: 16px;
+    }
+
+    .rv-meta-item:last-child { margin-bottom: 0; }
+
+    .rv-meta-label {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .rv-meta-value {
+        color: var(--text-white);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    /* Right Column */
+    .rv-detail-header {
+        margin-bottom: 30px;
+    }
+
+    .rv-detail-tags {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .rv-detail-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #fff, #e2e8f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .rv-purchase-card {
+        background: linear-gradient(145deg, rgba(26,26,46,0.8), rgba(15,15,26,0.9));
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(124, 58, 237, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .rv-price-large {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--accent-green);
+        margin-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .rv-owned-msg {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: var(--accent-green);
+        padding: 15px 20px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 25px;
+        font-weight: 500;
+    }
+
+    .rv-action-row {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .rv-btn-xl {
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+    }
+
+    .rv-description {
+        background: var(--bg-card);
+        border-radius: 20px;
+        padding: 40px;
+        border: 1px solid rgba(255,255,255,0.05);
+        color: #d1d5db;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+    
+    .rv-description h3 {
+        color: white;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+    
+    .rv-digital-info {
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: var(--accent-cyan);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+
+<div class="rv-detail">
+    <!-- Background Blur -->
+    <div class="rv-detail-bg"></div>
+
+    <div class="rv-detail-main">
+        <!-- Left Column -->
+        <div class="rv-detail-left">
+            <div class="rv-poster-wrapper">
+                <div class="rv-poster">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" alt="@Model.Title" onerror="this.src='/img/placeholder.jpg'">
+                    }
+                    else
+                    {
+                        <div style="width: 100%; height: 500px; display: flex; align-items: center; justify-content: center; background: var(--bg-card);">
+                            <i class="fas fa-gamepad fa-5x" style="color: var(--text-muted);"></i>
+                        </div>
+                    }
+                </div>
+                
+                <div class="rv-meta-card">
+                    <div class="rv-meta-item">
+                        <span class="rv-meta-label">Genre</span>
+                        <div class="rv-meta-value">@Model.Genre</div>
+                    </div>
+                    <div class="rv-meta-item">
+                        <span class="rv-meta-label">Platform</span>
+                        <div class="rv-meta-value">@Model.Platform</div>
+                    </div>
+                    <div class="rv-meta-item">
+                        <span class="rv-meta-label">Release Date</span>
+                        <div class="rv-meta-value">@Model.ReleaseDate.ToString("dd MMMM yyyy")</div>
+                    </div>
+                    <div class="rv-meta-item">
+                        <span class="rv-meta-label">Publisher</span>
+                        <div class="rv-meta-value">@Model.Publisher</div>
+                    </div>
+                    <div class="rv-meta-item">
+                        <span class="rv-meta-label">Developer</span>
+                        <div class="rv-meta-value">@Model.Developer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="rv-detail-right">
+            <div class="rv-detail-header">
+                <div class="rv-detail-tags">
+                    <span class="rv-tag">@Model.Genre</span>
+                    <span class="rv-tag">@Model.Platform</span>
+                    <span class="rv-tag"><i class="fas fa-star text-warning"></i> @Model.Rating</span>
+                </div>
+                <h1 class="rv-detail-title">@Model.Title</h1>
+            </div>
+
+            <div class="rv-purchase-card">
+                @if (isOwned)
+                {
+                    <div class="rv-owned-msg">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                        <div>
+                            <div>You own this game</div>
+                            <div style="font-size: 0.8rem; opacity: 0.8;">Purchased on @DateTime.Now.ToString("dd MMM yyyy")</div>
+                        </div>
+                    </div>
+                    
+                    <div class="rv-action-row">
+                        <a href="/Customer/Library" class="rv-btn-success rv-btn-xl flex-grow-1 justify-content-center">
+                            <i class="fas fa-play"></i> Launch from Library
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="rv-price-large">Rp @Model.Price.ToString("N0")</div>
+                    
+                    <form method="post" asp-action="AddToCart" asp-controller="Customer">
+                        <input type="hidden" name="gameId" value="@Model.Id" />
+                        <input type="hidden" name="quantity" value="1" />
+                        
+                        <div class="rv-action-row">
+                            <button type="submit" class="rv-btn-primary rv-btn-xl flex-grow-1 justify-content-center">
+                                <i class="fas fa-shopping-cart me-2"></i> Purchase Now
+                            </button>
+                        </div>
+                    </form>
+                }
+                
+                <div class="rv-action-row mt-3">
+                     <a href="/Customer/ToggleWishlist?gameId=@Model.Id" class="btn btn-outline-light w-100 py-3" style="border-radius: 12px; border-color: rgba(255,255,255,0.1);">
+                        <i class="@(ViewBag.IsWishlisted == true ? "fas text-danger" : "far") fa-heart me-2"></i> 
+                        @(ViewBag.IsWishlisted == true ? "Remove from Wishlist" : "Add to Wishlist")
+                     </a>
+                </div>
+                
+                <div class="rv-digital-info">
+                    <i class="fas fa-bolt"></i> Instant Digital Delivery
+                </div>
+            </div>
+
+            <div class="rv-description">
+                <h3>About This Game</h3>
+                @Model.Description
+            </div>
+        </div>
+    </div>
+</div>
